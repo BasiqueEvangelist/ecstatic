@@ -12,6 +12,7 @@ plugins {
     id 'maven-publish'
 }
 
+group = "me.basiqueevangelist"
 version = "0.1.0"
 
 repositories {
@@ -43,6 +44,21 @@ gradlePlugin {
         ecstatic {
             id = 'me.basiqueevangelist.ecstatic'
             implementationClass = 'me.basiqueevangelist.ecstatic.impl.EcstaticPlugin'
+        }
+    }
+}
+
+publishing {
+    repositories {
+        def ENV = System.getenv()
+        if (ENV.MAVEN_URL) {
+            repositories.maven {
+                url ENV.MAVEN_URL
+                credentials {
+                    username ENV.MAVEN_USERNAME
+                    password ENV.MAVEN_PASSWORD
+                }
+            }
         }
     }
 }
