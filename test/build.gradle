@@ -16,6 +16,10 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/test.accesswidener")
+}
+
 ecstatic {
     targetedClasses.add 'net/minecraft/entity/mob/EvokerEntity$WololoGoal'
     targetedClasses.add 'net/minecraft/entity/mob/SpellcastingIllagerEntity$CastSpellGoal'

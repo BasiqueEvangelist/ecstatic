@@ -22,8 +22,8 @@ pluginManagement {
 2. Add Ecstatic to the gradle project
 ```gradle
 plugins {
-    id "fabric-loom" version "0.9-SNAPSHOT"
-    id "me.basiqueevangelist.ecstatic" version "0.1.1"
+    id "fabric-loom" version "0.10-SNAPSHOT"
+    id "me.basiqueevangelist.ecstatic" version "0.1.3"
 }
 ```
 3. Configure classes to be made static

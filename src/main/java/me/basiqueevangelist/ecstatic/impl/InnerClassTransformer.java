@@ -41,12 +41,11 @@ public class InnerClassTransformer extends ClassNodeZipEntryTransformer {
             }
         }
 
-//        if (node.outerMethod != null) {
-//            node.outerMethod = null;
-//            node.outerMethodDesc = null;
-//            node.outerClass = containingName;
-//            System.out.printf("Making %s not in a method\n", node.name);
-//        }
+        if (node.outerMethod != null) {
+            node.outerMethod = null;
+            node.outerMethodDesc = null;
+            node.outerClass = null;
+        }
 
 
         return node;
