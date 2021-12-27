@@ -31,13 +31,13 @@ public class EcstaticProcessor implements JarProcessor {
 
     @Override
     public void process(File file) {
-        var fixFieldsTransformer = new MakeFieldNonsyntheticTransformer();
-        var staticifyTransformer = new MakeInnerClassesStaticTransformer(classesToMakeStatic);
+        var innerTransformer = new InnerClassTransformer();
+        var outerTransformer = new OuterClassTransformer(classesToMakeStatic);
         ZipEntryTransformerEntry[] transformers = Stream.concat(
             Arrays.stream(classesToMakeStatic)
-                .map(x -> new ZipEntryTransformerEntry(x + ".class", fixFieldsTransformer)),
+                .map(x -> new ZipEntryTransformerEntry(x + ".class", innerTransformer)),
             Arrays.stream(allContainingClasses)
-                .map(x -> new ZipEntryTransformerEntry(x + ".class", staticifyTransformer))
+                .map(x -> new ZipEntryTransformerEntry(x + ".class", outerTransformer))
         ).toArray(ZipEntryTransformerEntry[]::new);
 
         ZipUtil.transformEntries(file, transformers);

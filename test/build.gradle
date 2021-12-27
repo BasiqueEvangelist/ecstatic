@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.9-SNAPSHOT'
+    id 'fabric-loom' version '0.10-SNAPSHOT'
     id "me.basiqueevangelist.ecstatic"
 }
 
@@ -19,6 +19,7 @@ dependencies {
 ecstatic {
     targetedClasses.add 'net/minecraft/entity/mob/EvokerEntity$WololoGoal'
     targetedClasses.add 'net/minecraft/entity/mob/SpellcastingIllagerEntity$CastSpellGoal'
+    targetedClasses.add 'net/minecraft/world/biome/source/BiomeSource$class_6543'
 }
 
 processResources {

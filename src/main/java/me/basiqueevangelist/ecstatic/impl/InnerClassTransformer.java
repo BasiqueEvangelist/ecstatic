@@ -3,7 +3,7 @@ package me.basiqueevangelist.ecstatic.impl;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
-public class MakeFieldNonsyntheticTransformer extends ClassNodeZipEntryTransformer {
+public class InnerClassTransformer extends ClassNodeZipEntryTransformer {
     @Override
     protected ClassNode transform(ClassNode node) {
         String containingName = node.name.substring(0, node.name.lastIndexOf('$'));
@@ -40,6 +40,14 @@ public class MakeFieldNonsyntheticTransformer extends ClassNodeZipEntryTransform
                 }
             }
         }
+
+//        if (node.outerMethod != null) {
+//            node.outerMethod = null;
+//            node.outerMethodDesc = null;
+//            node.outerClass = containingName;
+//            System.out.printf("Making %s not in a method\n", node.name);
+//        }
+
 
         return node;
     }

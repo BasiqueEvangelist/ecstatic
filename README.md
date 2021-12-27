@@ -23,7 +23,7 @@ pluginManagement {
 ```gradle
 plugins {
     id "fabric-loom" version "0.9-SNAPSHOT"
-    id "me.basiqueevangelist.ecstatic" version "0.1.0"
+    id "me.basiqueevangelist.ecstatic" version "0.1.1"
 }
 ```
 3. Configure classes to be made static
