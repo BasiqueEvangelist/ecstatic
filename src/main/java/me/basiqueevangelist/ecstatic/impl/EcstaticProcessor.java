@@ -1,12 +1,14 @@
 package me.basiqueevangelist.ecstatic.impl;
 
 import com.google.common.hash.Hashing;
+import com.google.common.io.BaseEncoding;
 import me.basiqueevangelist.ecstatic.api.EcstaticExtension;
 import net.fabricmc.loom.configuration.processors.JarProcessor;
-import org.zeroturnaround.zip.ZipUtil;
-import org.zeroturnaround.zip.transform.ZipEntryTransformerEntry;
+import net.fabricmc.loom.util.Pair;
+import net.fabricmc.loom.util.ZipUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -23,6 +25,11 @@ public class EcstaticProcessor implements JarProcessor {
     }
 
     @Override
+    public String getId() {
+        return "ecstatic:ecstatic_" + BaseEncoding.base16().lowerCase().encode(classesHash);
+    }
+
+    @Override
     public void setup() {
         classesToMakeStatic = extension.getTargetedClasses().get().toArray(new String[0]);
         classesHash = Hashing.sha256().hashString(String.join(";", classesToMakeStatic), Charset.defaultCharset()).asBytes();
@@ -33,24 +40,24 @@ public class EcstaticProcessor implements JarProcessor {
     public void process(File file) {
         var innerTransformer = new InnerClassTransformer();
         var outerTransformer = new OuterClassTransformer(classesToMakeStatic);
-        ZipEntryTransformerEntry[] transformers = Stream.concat(
-            Arrays.stream(classesToMakeStatic)
-                .map(x -> new ZipEntryTransformerEntry(x + ".class", innerTransformer)),
-            Arrays.stream(allContainingClasses)
-                .map(x -> new ZipEntryTransformerEntry(x + ".class", outerTransformer))
-        ).toArray(ZipEntryTransformerEntry[]::new);
+//        ZipEntryTransformerEntry[] transformers = Stream.concat(
+//            Arrays.stream(classesToMakeStatic)
+//                .map(x -> new ZipEntryTransformerEntry(x + ".class", innerTransformer)),
+//            Arrays.stream(allContainingClasses)
+//                .map(x -> new ZipEntryTransformerEntry(x + ".class", outerTransformer))
+//        ).toArray(ZipEntryTransformerEntry[]::new);
 
-        ZipUtil.transformEntries(file, transformers);
+        try {
+            ZipUtils.transform(file.toPath(), Stream.concat(
+                Arrays.stream(classesToMakeStatic)
+                    .map(x -> new Pair<>(x, innerTransformer)),
+                Arrays.stream(allContainingClasses)
+                    .map(x -> new Pair<>(x, outerTransformer))
+            ));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to ecstaticify " + file, e);
+        }
 
-        ZipUtil.addEntry(file, "ecstatic.txt", classesHash);
-    }
-
-    @Override
-    public boolean isInvalid(File file) {
-        byte[] data = ZipUtil.unpackEntry(file, "ecstatic.txt");
-
-        if (data == null) return true;
-
-        return !Arrays.equals(data, classesHash);
+//        ZipUtil.transformEntries(file, transformers);
     }
 }

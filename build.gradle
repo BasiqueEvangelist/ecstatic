@@ -32,7 +32,7 @@ tasks.withType(GenerateModuleMetadata) {
 dependencies {
     compileOnly(gradleApi())
 
-    compileOnly "net.fabricmc:fabric-loom:0.9-SNAPSHOT"
+    compileOnly "net.fabricmc:fabric-loom:0.11-SNAPSHOT"
     implementation "org.zeroturnaround:zt-zip:1.14"
     implementation "com.google.guava:guava:30.1.1-jre"
     compileOnly "org.ow2.asm:asm:9.2"
